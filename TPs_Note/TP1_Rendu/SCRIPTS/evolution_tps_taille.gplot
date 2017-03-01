@@ -1,0 +1,17 @@
+
+
+set grid
+set terminal postscript eps color enhanced 16
+set output "PLOT/tps_calcul_taille.eps"
+set xlabel "Taille"
+set ylabel "Temps de calcul (en secondes)"
+set title "Evolution du temps de calcul en fonction de la taille"
+set key left above
+
+plot 'OUTPUT/temps_execution.txt' u 1:2 w lp lc rgb "red" title "Temps sequentiel"#,\
+#'OUTPUT/temps_execution.txt' u 1:($2 * 2) w lp lc rgb "orange" title "Temps x2",\
+#'OUTPUT/temps_execution.txt' u 1:($2 * 3) w lp lc rgb "yellow" title "Temps x3",\
+#'OUTPUT/temps_execution.txt' u 1:($2 * 4) w lp lc rgb "green" title "Temps x4",\
+#'OUTPUT/temps_execution.txt' u 1:($2 * 5) w lp lc rgb "blue" title "Temps x5"
+
+
