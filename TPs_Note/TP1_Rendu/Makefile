@@ -2,10 +2,10 @@
 CC=gcc
 CFLAG=-Wall 
 
-all: BIN/optim0.pgr
+all: executable
 
-BIN/optim0.pgr : CODE/init.c
-	$(CC) $^ $(CFLAG) -o $@
+executable : CODE/Makefile
+	make -C CODE
 
 visu :
 	evince PLOT/*
