@@ -2,8 +2,8 @@
 
 CC=gcc
 CFLAGS=-g -O2 -Wall
-OPT_FLAGS=-march=native -Ofast
-CFLAGS_KERNEL=-g -O3 -Wall $(OPT_FLAGS) 
+OPT_FLAGS=-march=native -Ofast -ffast-math
+CFLAGS_KERNEL=-g -Wall $(OPT_FLAGS) 
 
 OBJS=driver.o kernel.o rdtsc.o
 
