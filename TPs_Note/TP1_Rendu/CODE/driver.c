@@ -20,6 +20,7 @@ typedef struct {
 uint64_t rdtsc ();
 void matmul0 (int n, mytype_t a[n][n], mytype_t b[n][n], mytype_t c[n][n]);
 void matmul1 (int n, mytype_t a[n][n], mytype_t b[n][n], mytype_t c[n][n]);
+void matmul2 (int n, mytype_t a[n][n], mytype_t b[n][n], mytype_t c[n][n]);
 
 
 static void init_array(int n, mytype_t t[n][n])
@@ -122,10 +123,10 @@ int main(int argc, char const *argv[])
 			// (double) (duree_calcul.tv_sec) + (duree_calcul.tv_usec / 1000000.0));
 
 	//print performance  
-	// printf("Perf : %.2f cycles / iteration\n", (t2 - t1) / (((float) n) * n * n * r));
+	printf("Perf : %.2f cycles / iteration\n", (t2 - t1) / (((float) n) * n * n * r));
 
 	//print output
-	print_array (n , c);
+	// print_array (n , c);
 
 	free(pa);
 	free(pb);
