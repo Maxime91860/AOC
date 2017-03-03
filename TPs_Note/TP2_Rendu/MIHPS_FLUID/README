@@ -1,0 +1,76 @@
+#
+# MIHPS AOC MATERIALS
+#
+#
+This directory contains the following files:
+
+demo.html  : simple html file displaying the code of the applet and launching the applet
+
+WebStart.java : core java file defining the behavior of the applet and calling the FluidSolver class
+
+FluidSolver.java  : definition of the Fluid Grid object and call the C core computing libraries
+
+fluid_mihps.c  : Core computing libraries with all the hydro dynamics
+
+interface_c_java.swig  : SWIG configuration file. This files describes the interface between the C and the Java world.
+Swig will use this configuration files to generate automatically the wrappers both in C and Java to allow a correct
+conversion of function arguments. Please note that some specific declaration were done to map Java array to C pointers.
+
+applet.policy  : THIS FILE IS MANDATORY TO ALLOW THE APPLET TO CALL C FUNCTIONS
+
+Makefile   : configuration file for the make program. Used to ease the building of the binaries. See below.
+
+
+
+
+## BUILDING THE DEMO
+
+First define the interface between the C functions and the Java class. This done with SWIG and relies on the
+interface_c_java.swig configuration file. From the configuration file, SWIG will generates a C file named interface_c_java_wrap.c
+ make interface_c_java_wrap.o
+If jni.h not found, locate it on your system and update your Makefile accordingly.
+
+Compile the C core files (including the Swig generated wrapper file) in a shared library
+ make core
+
+Build Java binaries
+ make java
+
+The three steps above are be done altogether with the simple command:
+ make
+ 
+
+## RUNING THE DEMO
+
+Add the local directoru to the LD_LIBRARY_PATH
+ export LD_LIBRARY_PATH=.:$LD_LIBRARY_PATH
+
+There are two ways to run the demo, first by opening the demo.html file in a web-browser.
+demo.html calls WebStart.class as an applet and will launch the demo.
+
+HOWEVER, because the WebStart file contains calls to C function (JNI Java Native Interface) it falls under the security policy defined in the web-browser. Usually web-browsers do not grant permission to applet for JNI calls.
+Therefore, either edit the policy file of your web-browser. This depends on the java version installed on your system.
+Look for the file named "java.policy".
+For instance on some systems the file is stored in /etc/java-6-openjdk/security
+Edit the file (with the sudo comment) and add the following line (please edit correctly the path)
+
+grant codeBase "file:/home/MY_WORKING_DIRECTORY/MIHPS_FLUID/*" {
+        permission java.security.AllPermission;
+};
+
+
+
+Or use the alternative launching method relying on appletviewer. appletviewer is a convening tool running all the java applets
+embedded in a html document, but without displaying the html content. Simply type:
+ make run
+
+The demo supports the following interactions:
+
+- Left click to add smoke.
+- Right click and drag to add velocity.
+- Press 'v' to display the velocity field.
+- Press 'r' to reset the solver.
+- Use '[' and ']' to select the grid size.
+- Use '.' and ',' to modify the timestep.
+
+
