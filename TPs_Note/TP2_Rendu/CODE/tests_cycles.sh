@@ -3,6 +3,6 @@
 for((i=1;$i<=5;i=i+1))
 	do
 	echo ""
-	echo ".matmul 800 1"
-	./matmul 800 1
+	echo ".fluide 250 1"
+	./fluide 250 1
 done

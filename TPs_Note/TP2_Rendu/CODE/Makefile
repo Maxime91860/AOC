@@ -5,24 +5,24 @@ CFLAGS=-g -O2 -Wall
 OPT_FLAGS=-march=native -Ofast -ffast-math
 CFLAGS_KERNEL=-g -Wall $(OPT_FLAGS) 
 
-OBJS=driver.o kernel.o rdtsc.o
+OBJS=driver.o fluid_mihps.o rdtsc.o
 
-all: matmul
+all: fluide
 
-matmul : $(OBJS)
+fluide : $(OBJS)
 	$(CC) -o $@ $^
 
-maqao_profile : matmul
-	maqao lprof xp=$@ -- ./matmul 800 1
+maqao_profile : fluide
+	maqao lprof xp=$@ -- ./fluide 250 1
 
 maqao_results : maqao_profile
 	maqao lprof -df xp=$^
 	maqao lprof -dl xp=$^	
 
 maqao_hints : maqao_profile
-	maqao cqa loop=$(IDLOOP) matmul uarch=HASWELL >> hint.txt
+	maqao cqa loop=$(IDLOOP) fluide uarch=HASWELL >> hint.txt
 
-kernel.o : kernel.c
+fluid_mihps.o : fluid_mihps.c
 	$(CC) $(CFLAGS_KERNEL) -c $<
 
 driver.o : driver.c
@@ -32,4 +32,4 @@ rdtsc.o : rdtsc.c
 	$(CC) $(CFLAGS) -c $<
 
 clean : 
-	rm -rf *.o matmul maqao_profile hint.txt 
+	rm -rf *.o fluide maqao_profile hint.txt 

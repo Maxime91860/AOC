@@ -1,6 +1,7 @@
 
 CC=gcc
-INCLUDE=-I/usr/lib/jvm/java-6-openjdk-amd64/include/
+#INCLUDE=-I/usr/lib/jvm/java-6-openjdk-amd64/include/
+INCLUDE=-I/usr/lib/jvm/java-7-openjdk-amd64/include/
 CFLAGS=-c -fpic $(INCLUDE)
 
 all: core java
