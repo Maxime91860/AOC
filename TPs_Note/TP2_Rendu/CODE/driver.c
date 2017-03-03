@@ -87,9 +87,9 @@ int main (int argc, char *argv[]) {
 
   /* Print timing results */
 
-  write_array_in_file (size, d,"d_optim2.txt");
-  write_array_in_file (size, u,"u_optim2.txt");
-  write_array_in_file (size, v,"v_optim2.txt");
+  write_array_in_file (size, d,"d_optim3.txt");
+  write_array_in_file (size, u,"u_optim3.txt");
+  write_array_in_file (size, v,"v_optim3.txt");
   puts ("Cycles per element:");
   printf (" - velocitySolver: %.2f\n", (float) tv / (nr * n * n));
   printf (" - densitySolver : %.2f\n", (float) td / (nr * n * n));

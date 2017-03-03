@@ -2,8 +2,8 @@
 
 CC=gcc
 CFLAGS=-g -O2 -Wall
-OPT_FLAGS=
-#= -march=native -Ofast -ffast-math
+OPT_FLAGS= -O2
+#-march=native -Ofast -ffast-math
 CFLAGS_KERNEL=-g -Wall $(OPT_FLAGS) 
 
 OBJS=driver.o fluid_mihps.o rdtsc.o

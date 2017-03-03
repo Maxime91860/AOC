@@ -5,6 +5,14 @@
  
 #define build_index(i, j, grid_size) ((i) + ((grid_size) + 2) * (j))
 
+
+#define MY_MACRO(i, j, grid_size, a, x, x0, c) (((a) * \
+(x[build_index((i)-1, (j), (grid_size))] +\
+ x[build_index((i)+1, (j), (grid_size))] +\
+ x[build_index((i), (j)-1, (grid_size))] +\
+ x[build_index((i), (j)+1, (grid_size))]) +\
+ x0[build_index((i), (j), (grid_size))]) * (c))
+
 /*
  * function used to compute the linear position in a vector express as coordinate in a two-D structure
  */
@@ -93,17 +101,28 @@ void setBoundry(int b, float* x, int grid_size)
 void linearSolver(int b, float* x, float* x0, float a, float c, float dt, int grid_size)
   {
   int i,j,k;
-  float div_c;
+  float div_c = 1.0f/c;
   for (k = 0; k < 20; k++)
     {
-    for (i = 1; i <= grid_size; i++)
+    for (i = 1; i <= grid_size; i+=3)
+    {
+      for (j = 1; j <= grid_size; j+=2)
       {
-      for (j = 1; j <= grid_size; j++)
-        {
-        div_c = 1/c;
-        x[build_index(i, j, grid_size)] = (a * ( x[build_index(i-1, j, grid_size)] + x[build_index(i+1, j, grid_size)] +   x[build_index(i, j-1, grid_size)] + x[build_index(i, j+1, grid_size)]) +  x0[build_index(i, j, grid_size)]) * div_c;
-        }
+        //Unrolling
+        x[build_index(i, j, grid_size)] = MY_MACRO(i, j, grid_size, a, x, x0, div_c);
+        x[build_index(i, j+1, grid_size)] = MY_MACRO(i, j+1, grid_size, a, x, x0, div_c);
+        // x[build_index(i, j+2, grid_size)] = MY_MACRO(i, j+2, grid_size, a, x, x0, div_c);
+        x[build_index(i+1, j, grid_size)] = MY_MACRO(i+1, j, grid_size, a, x, x0, div_c);
+        x[build_index(i+1, j+1, grid_size)] = MY_MACRO(i+1, j+1, grid_size, a, x, x0, div_c);
+        // x[build_index(i+1, j+2, grid_size)] = MY_MACRO(i+1, j+2, grid_size, a, x, x0, div_c);
+        x[build_index(i+2, j, grid_size)] = MY_MACRO(i+2, j, grid_size, a, x, x0, div_c);
+        x[build_index(i+2, j+1, grid_size)] = MY_MACRO(i+2, j+1, grid_size, a, x, x0, div_c);
+        // x[build_index(i+2, j+1, grid_size)] = MY_MACRO(i+2, j+2, grid_size, a, x, x0, div_c);
+        // x[build_index(i+3, j, grid_size)] = MY_MACRO(i+3, j, grid_size, a, x, x0, div_c);
+        // x[build_index(i+3, j+1, grid_size)] = MY_MACRO(i+3, j+1, grid_size, a, x, x0, div_c);
+        // x[build_index(i+2, j+1, grid_size)] = MY_MACRO(i+2, j+2, grid_size, a, x, x0, div_c);        
       }
+    }
     setBoundry(b, x, grid_size);
     }
   }
@@ -344,7 +363,7 @@ void c_densitySolver(float *d, float *dOld, float diff, float *u, float *v , flo
  * The basic velocity solving routine as described by Stam.
  */
 void c_velocitySolver( float *u, float *uOld, float *v, float *vOld, float *curl, float *d, float visc, float dt, int grid_size, int vector_size)
-  {
+{
   int i;
 
   // add velocity that was input by mouse
@@ -385,11 +404,11 @@ void c_velocitySolver( float *u, float *uOld, float *v, float *vOld, float *curl
 
   // clear all input velocities for next frame
   for (i = 0; i < vector_size; i++)
-      { 
-      uOld[i] = 0; 
-      vOld[i] = 0; 
-      }
+  { 
+  uOld[i] = 0; 
+  vOld[i] = 0; 
   }
+}
 
 
 
