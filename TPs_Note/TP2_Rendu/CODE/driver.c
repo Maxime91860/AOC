@@ -15,22 +15,24 @@ static void init_array (int n, float a[n]) {
     a[i] = (float) rand() / RAND_MAX;
 }
 
-static void print_array (int n, float a[n]) {
-  int i;
+// static void print_array (int n, float a[n]) {
+//   int i;
 
-  for (i=0; i<n; i++)
-    printf ("%f ", a[i]);
+//   for (i=0; i<n; i++)
+//     printf ("%f ", a[i]);
 
-  putchar ('\n');
-}
+//   putchar ('\n');
+// }
 
-static void write_array (int n, float a[n],const char* s) {
+static void write_array_in_file (int n, float a[n],const char* s) {
   int i;
   FILE *f=fopen(s,"w");
-  for (i=0; i<n; i++)
-    {fprintf (f,"%f \n", a[i]);}
-    fclose(f);
+  for (i=0; i<n; i++){
+  	fprintf (f,"%f \n", a[i]);
+  }
+  fclose(f);
 }
+
 int main (int argc, char *argv[]) {
 
   /* Check arguments */
@@ -82,19 +84,12 @@ int main (int argc, char *argv[]) {
     td += t3 - t2;
   }
 
-  /*
-    print_array (size, d);
-    print_array (size, u);
-    print_array (size, v);
-
-    //*/
-
 
   /* Print timing results */
 
-    write_array (size, d,"d.txt");
-    write_array (size, u,"u.txt");
-    write_array (size, v,"v.txt");
+  write_array_in_file (size, d,"d_optim2.txt");
+  write_array_in_file (size, u,"u_optim2.txt");
+  write_array_in_file (size, v,"v_optim2.txt");
   puts ("Cycles per element:");
   printf (" - velocitySolver: %.2f\n", (float) tv / (nr * n * n));
   printf (" - densitySolver : %.2f\n", (float) td / (nr * n * n));

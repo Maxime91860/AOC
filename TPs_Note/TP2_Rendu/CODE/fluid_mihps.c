@@ -3,13 +3,15 @@
 #include <stdio.h>
 #include <math.h>
  
+#define build_index(i, j, grid_size) ((i) + ((grid_size) + 2) * (j))
+
 /*
  * function used to compute the linear position in a vector express as coordinate in a two-D structure
  */
-int build_index(int i, int j, int grid_size)
-  {
-  return (i + (grid_size + 2) * j);
-  }
+// int build_index(int i, int j, int grid_size)
+//   {
+//   return (i + (grid_size + 2) * j);
+//   }
 
 /*
  * Utility function to push new value in the array of a preceding time step
@@ -91,14 +93,15 @@ void setBoundry(int b, float* x, int grid_size)
 void linearSolver(int b, float* x, float* x0, float a, float c, float dt, int grid_size)
   {
   int i,j,k;
-
+  float div_c;
   for (k = 0; k < 20; k++)
     {
     for (i = 1; i <= grid_size; i++)
       {
       for (j = 1; j <= grid_size; j++)
         {
-        x[build_index(i, j, grid_size)] = (a * ( x[build_index(i-1, j, grid_size)] + x[build_index(i+1, j, grid_size)] +   x[build_index(i, j-1, grid_size)] + x[build_index(i, j+1, grid_size)]) +  x0[build_index(i, j, grid_size)]) / c;
+        div_c = 1/c;
+        x[build_index(i, j, grid_size)] = (a * ( x[build_index(i-1, j, grid_size)] + x[build_index(i+1, j, grid_size)] +   x[build_index(i, j-1, grid_size)] + x[build_index(i, j+1, grid_size)]) +  x0[build_index(i, j, grid_size)]) * div_c;
         }
       }
     setBoundry(b, x, grid_size);
@@ -148,7 +151,7 @@ float buoyancy(float *dst, float *src, int grid_size)
   float b = 0.025f;
   int i,j;
 
-  float current_max=0;
+  // float current_max=0;
 
   for (i = 1; i <= grid_size; i++)
     {
@@ -165,9 +168,10 @@ float buoyancy(float *dst, float *src, int grid_size)
     {
     for (j = 1; j <= grid_size; j++)
       {
-      dst[build_index(i, j, grid_size)] = a * src[build_index(i, j, grid_size)] + -b * (src[build_index(i, j, grid_size)] - Tamb);
+        dst[build_index(i, j, grid_size)] = a * src[build_index(i, j, grid_size)] + -b * (src[build_index(i, j, grid_size)] - Tamb);
       }
     }
+    return 0;
   }
 
 
@@ -242,7 +246,7 @@ void vorticityConfinement(float* Fvc_x, float* Fvc_y, float *curl, float *u, flo
     {
     for (j = 1; j <= grid_size; j++)
       {
-      curl[build_index(i, j, grid_size)] = abs(calculate_curl(i, j, grid_size, u, v));
+      curl[build_index(i, j, grid_size)] = fabsf(calculate_curl(i, j, grid_size, u, v));
       }
     }
 
